@@ -50,13 +50,18 @@ public class MyArrayList<E> implements ArrayListNew<E> {
     public boolean add(int index, E e) {
         checkingSize();
         E[] temp = array;
-        array = (E[]) new Object[temp.length + 1];
-        System.arraycopy(temp, 0, array, 0, index - 1);
+        try {
+            array = (E[]) new Object[temp.length + 1];
+        } catch (ClassCastException ex) {
+            ex.printStackTrace();
+        }
+        System.arraycopy(temp, 0, array, 0, index);
         array[index] = e;
-        System.arraycopy(temp, index, array, index + 1, temp.length + 1);
+        System.arraycopy(temp, index, array, index + 1, temp.length - index);
+        size++;
         return true;
-
     }
+
     /**
      * Проверка массива на вместительность элемента. Обрабатывается исключение ClassCastException,
      * если некорректно сработает приведение класса
@@ -100,7 +105,11 @@ public class MyArrayList<E> implements ArrayListNew<E> {
     @Override
     public void clear() {
         E[] temp = array;
-        array = (E[]) new Object[temp.length];
+        try {
+            array = (E[]) new Object[temp.length];
+        } catch (ClassCastException ex) {
+            ex.printStackTrace();
+        }
         for (int i = 0; i < size; i++) {
             array[i] = null;
         }
